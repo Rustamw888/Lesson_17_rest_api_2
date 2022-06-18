@@ -13,6 +13,8 @@ import qa.guru.helpers.AllureAttachments;
 import qa.guru.helpers.DriverSettings;
 import qa.guru.helpers.DriverUtils;
 
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+
 @ExtendWith({AllureJunit5.class})
 public class TestBase {
     @BeforeAll
@@ -25,15 +27,25 @@ public class TestBase {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
     }
 
-    @AfterEach
-    public void afterEach() {
-        String sessionId = DriverUtils.getSessionId();
-        AllureAttachments.addScreenshotAs("Last screenshot");
-        AllureAttachments.addPageSource();
-        AllureAttachments.addBrowserConsoleLogs();
-        Selenide.closeWebDriver();
-        if (Local.isVideoOn()) {
-            AllureAttachments.addVideo(sessionId);
-        }
-    }
+//    @AfterEach
+//    public void afterEach() {
+//        String sessionId = DriverUtils.getSessionId();
+//        AllureAttachments.addScreenshotAs("Last screenshot");
+//        AllureAttachments.addPageSource();
+//        AllureAttachments.addBrowserConsoleLogs();
+//        Selenide.closeWebDriver();
+//        if (Local.isVideoOn()) {
+//            AllureAttachments.addVideo(sessionId);
+//        }
+//    }
+@AfterEach
+void afterEach() {
+    AllureAttachments.screenshotAs("Last screenshot");
+    AllureAttachments.pageSource();
+    AllureAttachments.browserConsoleLogs();
+
+        AllureAttachments.addVideo();
+
+    closeWebDriver();
+}
 }
