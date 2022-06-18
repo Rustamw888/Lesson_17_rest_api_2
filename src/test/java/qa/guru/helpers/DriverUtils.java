@@ -19,7 +19,6 @@ public class DriverUtils {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(DriverUtils.class);
 
-
     public static String getSessionId() {
         return ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
     }

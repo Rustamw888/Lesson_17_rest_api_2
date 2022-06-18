@@ -14,6 +14,7 @@ import qa.guru.helpers.DriverUtils;
 
 @ExtendWith({AllureJunit5.class})
 public class TestBase {
+
     @BeforeAll
     static void beforeAll() {
         DriverSettings.configure();
