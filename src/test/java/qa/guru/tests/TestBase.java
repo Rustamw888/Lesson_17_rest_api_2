@@ -8,12 +8,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import qa.guru.config.Local;
 import qa.guru.helpers.AllureAttachments;
 import qa.guru.helpers.DriverSettings;
 import qa.guru.helpers.DriverUtils;
-
-import static com.codeborne.selenide.Selenide.closeWebDriver;
 
 @ExtendWith({AllureJunit5.class})
 public class TestBase {
@@ -33,20 +30,7 @@ public class TestBase {
         AllureAttachments.addScreenshotAs("Last screenshot");
         AllureAttachments.addPageSource();
         AllureAttachments.addBrowserConsoleLogs();
-
         AllureAttachments.addVideo(sessionId);
-
         Selenide.closeWebDriver();
-
     }
-//@AfterEach
-//void afterEach() {
-//    AllureAttachments.screenshotAs("Last screenshot");
-//    AllureAttachments.pageSource();
-//    AllureAttachments.browserConsoleLogs();
-//
-//        AllureAttachments.addVideo();
-//
-//    closeWebDriver();
-//}
 }
