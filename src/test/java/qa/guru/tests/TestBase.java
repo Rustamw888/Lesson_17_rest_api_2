@@ -27,25 +27,26 @@ public class TestBase {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
     }
 
-//    @AfterEach
-//    public void afterEach() {
-//        String sessionId = DriverUtils.getSessionId();
-//        AllureAttachments.addScreenshotAs("Last screenshot");
-//        AllureAttachments.addPageSource();
-//        AllureAttachments.addBrowserConsoleLogs();
-//        Selenide.closeWebDriver();
-//        if (Local.isVideoOn()) {
-//            AllureAttachments.addVideo(sessionId);
-//        }
-//    }
-@AfterEach
-void afterEach() {
-    AllureAttachments.screenshotAs("Last screenshot");
-    AllureAttachments.pageSource();
-    AllureAttachments.browserConsoleLogs();
+    @AfterEach
+    public void afterEach() {
+        String sessionId = DriverUtils.getSessionId();
+        AllureAttachments.addScreenshotAs("Last screenshot");
+        AllureAttachments.addPageSource();
+        AllureAttachments.addBrowserConsoleLogs();
+        if (Local.isVideoOn()) {
+            AllureAttachments.addVideo(sessionId);
+        }
+        Selenide.closeWebDriver();
 
-        AllureAttachments.addVideo();
-
-    closeWebDriver();
-}
+    }
+//@AfterEach
+//void afterEach() {
+//    AllureAttachments.screenshotAs("Last screenshot");
+//    AllureAttachments.pageSource();
+//    AllureAttachments.browserConsoleLogs();
+//
+//        AllureAttachments.addVideo();
+//
+//    closeWebDriver();
+//}
 }
