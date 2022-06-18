@@ -112,4 +112,36 @@ public class DemoWebShopTests extends TestBase {
         step("Item successful added to cart", () ->
                 $(".tbody .product-name").find(byText("$100 Physical Gift Card")));
     }
+
+    @Test
+    @Tag("demowebshop")
+    @DisplayName("New Test api lesson part 3")
+    void newTest() {
+        step("Get cookie by api and set it to browser", () -> {
+            String authCookieValue = given()
+                    .filter(withCustomTemplates())
+                    .contentType("application/x-www-form-urlencoded")
+                    .body(String.format())
+                    .log().all()
+                    .when()
+                    .post("/addproducttocart/details/74/1")
+                    .then()
+                    .log().all()
+                    .statusCode(302)
+                    .extract().cookie(authCookieName);
+
+            step("Open minimal content, because cookie can be set when site is opened", () -> {
+                open("/Themes/DefaultClean/Content/images/logo.png");
+            });
+            step("Set cookie to browser", () -> {
+                Cookie authCookie = new Cookie(authCookieName, authCookieValue);
+                WebDriverRunner.getWebDriver().manage().addCookie(authCookie);
+            });
+        });
+        step("Open main page", () -> {
+            open("/");
+        });
+        step("Verify successful authorization", () ->
+                $(".account").shouldHave(text(login)));
+    }
 }
