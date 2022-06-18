@@ -5,8 +5,7 @@ import org.aeonbits.owner.Config;
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({
         "system:properties",
-        "classpath:app/remote.properties",
-        "classpath:app/cred.properties"
+        "classpath:app/remote.properties"
 })
 public interface IRemoteConfig extends Config {
 
