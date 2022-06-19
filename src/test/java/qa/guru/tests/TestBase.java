@@ -12,6 +12,8 @@ import qa.guru.helpers.AllureAttachments;
 import qa.guru.helpers.DriverSettings;
 import qa.guru.helpers.DriverUtils;
 
+import static com.codeborne.selenide.WebDriverRunner.hasWebDriverStarted;
+
 @ExtendWith({AllureJunit5.class})
 public class TestBase {
 
@@ -27,11 +29,13 @@ public class TestBase {
 
     @AfterEach
     public void afterEach() {
-        String sessionId = DriverUtils.getSessionId();
-        AllureAttachments.addScreenshotAs("Last screenshot");
-        AllureAttachments.addPageSource();
-        AllureAttachments.addBrowserConsoleLogs();
-        AllureAttachments.addVideo(sessionId);
+        if (hasWebDriverStarted()) {
+            String sessionId = DriverUtils.getSessionId();
+            AllureAttachments.addScreenshotAs("Last screenshot");
+            AllureAttachments.addPageSource();
+            AllureAttachments.addBrowserConsoleLogs();
+            AllureAttachments.addVideo(sessionId);
+        }
         Selenide.closeWebDriver();
     }
 }

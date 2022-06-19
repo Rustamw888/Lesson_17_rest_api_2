@@ -17,8 +17,12 @@ import static com.codeborne.selenide.Selenide.open;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.HTML;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.notNullValue;
 import static qa.guru.helpers.CustomApiListener.withCustomTemplates;
 
+@Tag("demowebshop")
 public class DemoWebShopTests extends TestBase {
 
     static String login,
@@ -35,7 +39,6 @@ public class DemoWebShopTests extends TestBase {
     }
 
     @Test
-    @Tag("demowebshop")
     @DisplayName("Successful authorization to some demowebshop (API + UI + String + Allure + Custom)")
     void loginWithApiWithStringWithAllureCustomTest() {
         step("Get cookie by api and set it to browser", () -> {
@@ -68,7 +71,6 @@ public class DemoWebShopTests extends TestBase {
     }
 
     @Test
-    @Tag("demowebshop")
     @DisplayName("Shopping card is not empty")
     void itemAddedToCartTest() {
         step("Get cookie by api and set it to browser", () -> {
@@ -114,34 +116,134 @@ public class DemoWebShopTests extends TestBase {
     }
 
     @Test
-    @Tag("demowebshop")
-    @DisplayName("New Test api lesson part 3")
+    @DisplayName("New Test 1 api lesson part 3")
     void newTest() {
-        step("Get cookie by api and set it to browser", () -> {
-            String authCookieValue = given()
+        String body = "product_attribute_74_5_26=81" +
+                "&product_attribute_74_6_27=83" +
+                "&product_attribute_74_3_28=86" +
+                "&addtocart_74.EnteredQuantity=1";
+        String authCookieValue = "1625D415723F7B5F4F5574AA360892064D3739D8B35FD39A2E3C6C37047832" +
+                "A2A86961112A53EE8AC9EAB004A768051A37EFC4F13FAAB8D76A4A8AC12F31ED747FDFF91EEAF042A494538C8D9084C38111" +
+                "A6EBA20BC69C6765B98009E0A2690D234BF53DA3BA753B5A0A6A98AF0EAFB2A8503A84D3FBB3F32E519E519F6EA07B8697CB" +
+                "BE6EFFB5803BEEE1CA431BFC1D";
+        step("", () -> {
+            String cartSize = given()
                     .filter(withCustomTemplates())
                     .contentType("application/x-www-form-urlencoded")
-                    .body(String.format())
+                    .body(body)
+                    .cookie(authCookieName, authCookieValue)
                     .log().all()
                     .when()
                     .post("/addproducttocart/details/74/1")
                     .then()
                     .log().all()
-                    .statusCode(302)
-                    .extract().cookie(authCookieName);
+                    .statusCode(200)
+                    .body("success", is(true))
+                    .body("message", containsString("The product has been added to your"))
+                    .body("message", is("The product has been added to your \u003ca " +
+                            "href=\"/cart\"\u003eshopping cart\u003c/a\u003e"))
+                    .body("updatetopcartsectionhtml", notNullValue())
+                    .body("updateflyoutcartsectionhtml", notNullValue())
+                    .extract().path("updatetopcartsectionhtml");
 
-            step("Open minimal content, because cookie can be set when site is opened", () -> {
-                open("/Themes/DefaultClean/Content/images/logo.png");
-            });
+            Integer cardSizeInt = Integer.valueOf(cartSize.replaceAll("[()]", ""));
+
+            step("Open minimal content, because cookie can be set when site is opened", () ->
+                    open("/Themes/DefaultClean/Content/images/logo.png"));
+
             step("Set cookie to browser", () -> {
                 Cookie authCookie = new Cookie(authCookieName, authCookieValue);
                 WebDriverRunner.getWebDriver().manage().addCookie(authCookie);
             });
+            step("Open main page", () ->
+                    open("/"));
+
+            step("Verify card size", () ->
+                    $("#topcartlink .cart-qty").shouldHave(text(cartSize)));
         });
-        step("Open main page", () -> {
-            open("/");
+    }
+
+
+    @Test
+    @DisplayName("New Test 2 api lesson part 3")
+    void newTestWithDynamicCookie() {
+
+        step("", () -> {
+            String authCookieValue = given()
+                    .filter(withCustomTemplates())
+                    .contentType("application/x-www-form-urlencoded")
+                    .formParam("Email", login)
+                    .formParam("Password", password)
+                    .log().all()
+                    .when()
+                    .post("/login")
+                    .then()
+                    .log().all()
+                    .statusCode(302)
+                    .extract().cookie(authCookieName);
+
+            String body = "product_attribute_74_5_26=81" +
+                    "&product_attribute_74_6_27=83" +
+                    "&product_attribute_74_3_28=86" +
+                    "&addtocart_74.EnteredQuantity=1";
+
+            String cartSize = given()
+                    .filter(withCustomTemplates())
+                    .contentType("application/x-www-form-urlencoded")
+                    .body(body)
+                    .cookie(authCookieName, authCookieValue)
+                    .log().all()
+                    .when()
+                    .post("/addproducttocart/details/74/1")
+                    .then()
+                    .log().all()
+                    .statusCode(200)
+                    .body("success", is(true))
+                    .body("message", containsString("The product has been added to your"))
+                    .body("message", is("The product has been added to your \u003ca " +
+                            "href=\"/cart\"\u003eshopping cart\u003c/a\u003e"))
+                    .body("updatetopcartsectionhtml", notNullValue())
+                    .body("updateflyoutcartsectionhtml", notNullValue())
+                    .extract().path("updatetopcartsectionhtml");
+
+            step("Open minimal content, because cookie can be set when site is opened", () ->
+                    open("/Themes/DefaultClean/Content/images/logo.png"));
+
+            step("Set cookie to browser", () -> {
+                Cookie authCookie = new Cookie(authCookieName, authCookieValue);
+                WebDriverRunner.getWebDriver().manage().addCookie(authCookie);
+            });
+            step("Open main page", () ->
+                    open("/"));
+
+            step("Verify card size", () ->
+                    $("#topcartlink .cart-qty").shouldHave(text(cartSize)));
         });
-        step("Verify successful authorization", () ->
-                $(".account").shouldHave(text(login)));
+    }
+
+    @Test
+    @DisplayName("New Test 3 api lesson part 3")
+    void newTestAsNewUser() {
+
+            String body = "product_attribute_74_5_26=81" +
+                    "&product_attribute_74_6_27=83" +
+                    "&product_attribute_74_3_28=86" +
+                    "&addtocart_74.EnteredQuantity=1";
+
+            given()
+                    .filter(withCustomTemplates())
+                    .contentType("application/x-www-form-urlencoded")
+                    .body(body)
+                    .log().all()
+                    .when()
+                    .post("/addproducttocart/details/74/1")
+                    .then()
+                    .log().all()
+                    .statusCode(200)
+                    .body("success", is(true))
+                    .body("message", is("The product has been added to your " +
+                            "\u003ca href=\"/cart\"\u003eshopping cart\u003c/a\u003e"))
+                    .body("updateflyoutcartsectionhtml", notNullValue())
+                    .body("updatetopcartsectionhtml", is("(1)"));
     }
 }
