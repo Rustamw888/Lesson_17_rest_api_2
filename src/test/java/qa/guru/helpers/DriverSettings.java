@@ -3,14 +3,14 @@ package qa.guru.helpers;
 import com.codeborne.selenide.Configuration;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import qa.guru.config.Local;
+import qa.guru.config.Remote;
 
 public class DriverSettings {
 
     public static void configure() {
-        Configuration.browser = Local.config.browser();
-        Configuration.browserVersion = Local.config.browserVersion();
-        Configuration.browserSize = Local.config.browserSize();
+        Configuration.browser = Remote.config.browser();
+        Configuration.browserVersion = Remote.config.browserVersion();
+        Configuration.browserSize = Remote.config.browserSize();
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         ChromeOptions chromeOptions = new ChromeOptions();
@@ -21,10 +21,10 @@ public class DriverSettings {
         chromeOptions.addArguments("--disable-notifications");
         chromeOptions.addArguments("--lang=en-en");
 
-        if (Local.isRemoteWebDriver()) {
+        if (Remote.isRemoteWebDriver()) {
             capabilities.setCapability("enableVNC", true);
             capabilities.setCapability("enableVideo", true);
-            Configuration.remote = Local.config.remoteDriverUrl();
+            Configuration.remote = Remote.config.remoteDriverUrl();
         }
 
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);

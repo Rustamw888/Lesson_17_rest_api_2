@@ -6,7 +6,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qa.guru.config.Local;
+import qa.guru.config.Remote;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,7 +32,7 @@ public class DriverUtils {
     }
 
     public static URL getVideoUrl(String sessionId) {
-        String videoUrl = Local.config.videoStorage() + sessionId + ".mp4";
+        String videoUrl = Remote.config.videoStorage() + sessionId + ".mp4";
 
         try {
             return new URL(videoUrl);

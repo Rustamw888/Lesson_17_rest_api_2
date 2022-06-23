@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import qa.guru.config.Remote;
+import qa.guru.config.Local;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
@@ -32,10 +32,10 @@ public class DemoWebShopTests extends TestBase {
 
     @BeforeAll
     static void configureBaseUrl() {
-        RestAssured.baseURI = Remote.config.apiUrl();
-        Configuration.baseUrl = Remote.config.webUrl();
-        login = Remote.config.userLogin();
-        password = Remote.config.userPassword();
+        RestAssured.baseURI = Local.config.apiUrl();
+        Configuration.baseUrl = Local.config.webUrl();
+        login = Local.config.userLogin();
+        password = Local.config.userPassword();
     }
 
     @Test
